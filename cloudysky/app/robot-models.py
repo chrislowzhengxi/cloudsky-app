@@ -1,4 +1,30 @@
+# Model: ChatGPT 5; 10/30/25
+# Prompt used: 
+"""
+Create a Django app for a social media platform with user profiles, posts, and comments.
 
+Below is the specification of the app: 
+CloudySky: An Ideologically Consonant Chat Environment
+
+We want to implement a (web-based) chat app, not unlike Ed, that permits site 
+moderators to remove and hide user-created content. Users will see a feed of 
+user-created content, will have a form to submit new posts and a form to attach 
+new comments to existing posts. While you can imagine rooms, channels, and follower 
+relationships, for this class we need only implement a single feed (we'll have to 
+decide how to order the posts; chronological by original posting date is the simplest, 
+but clearly prioritizes recent over highly engaging content). The feed should display 
+an abbreviated version of the post; a page dedicated to the post should display all 
+of the (non-suppressed) comments attached to the post. While users see a feed of 
+posts and attached comments, administrators have the responsibility to police the
+site for non-ideologically conforming content. Administrators have the ability 
+to hide posts, which will remove them and their comments from all of the feeds 
+except their creator, and the ability to hide comments, which replace the comments 
+with a placeholder that says that content has been removed. The administrators 
+can still see blocked content in their feeds, it is just displayed with a different 
+color. Users whose content has been blocked should see a message attached to each piece 
+of blocked content an explanation (chosen from a list of reasons) of the reason 
+that their content was suppressed.
+"""
 
 # app/models.py
 from django.conf import settings
