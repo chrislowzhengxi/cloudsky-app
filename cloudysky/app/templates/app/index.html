@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloudySky — Home</title>
+  <style>
+    :root {
+      --accent: #0a84ff; /* macOS blue */
+      --bg: #f7f8fa;
+      --text: #1c1c1e;
+      --muted: #6b7280;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .wrap {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+    }
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      text-align: center; /* center all content */
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.75rem;
+    }
+    .bio {
+      margin: 0 auto 1rem auto;
+      max-width: 60ch;
+      line-height: 1.5;
+    }
+    .user-pill {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(10,132,255,0.12);
+      color: var(--accent);
+      font-weight: 700; /* bolds the username */
+    }
+    .muted { color: var(--muted); }
+    .time {
+      margin-top: 1rem;
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <main class="card">
+      <h1>Welcome to CloudySky</h1>
+
+      <!-- Team bio (brief and centered) -->
+      <p class="bio">
+        We are Team YACL. Chris, Yuto, and Lucy building an app in Django for CMSC 13600.
+        We love clean data models. This page is powered by Django templates.
+      </p>
+
+      <!-- Highlight current logged-in user -->
+      {% if user.is_authenticated %}
+        <h1>Welcome {{ user.username }} ({{ user.email }})</h1>
+      {% else %}
+        <h1>Not logged in</h1>
+      {% endif %}
+
+      <!-- Current time from the view context -->
+      <p class="time">Current time: <strong>{{ current_time }}</strong></p>
+    </main>
+  </div>
+</body>
+</html>

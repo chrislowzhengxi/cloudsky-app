@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account</title>
+  <style>
+    :root { --accent:#0a84ff; --bg:#f7f8fa; --muted:#6b7280; }
+    body { margin:0; background:var(--bg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+    .wrap { min-height:100dvh; display:grid; place-items:center; padding:2rem; }
+    .card { width:100%; max-width:560px; background:#fff; border-radius:16px; padding:1.5rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); }
+    h1 { text-align:center; margin:0 0 1rem 0; }
+    form { display:grid; gap:0.75rem; }
+    label { font-weight:600; }
+    input[type="text"], input[type="email"], input[type="password"] { width:100%; padding:0.6rem 0.7rem; border-radius:10px; border:1px solid #e5e7eb; }
+    .row { display:grid; gap:0.5rem; }
+    .muted { color:var(--muted); font-size:0.9rem; }
+    .actions { display:flex; justify-content:center; margin-top:0.5rem; }
+    button { background:var(--accent); color:#fff; border:none; padding:0.6rem 1rem; border-radius:10px; cursor:pointer; }
+    button:hover { filter:brightness(0.95); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Create your account</h1>
+
+      <form action="/app/createUser" method="post">
+        {% csrf_token %}
+
+        <div class="row">
+          <label for="user_name">User Name</label>
+          <input type="text" id="user_name" name="user_name" required />
+        </div>
+
+        <div class="row">
+          <label for="last_name">Last name (optional)</label>
+          <input type="text" id="last_name" name="last_name" />
+        </div>
+
+        <div class="row">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="row">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+
+        <div class="row">
+          <label>Account Type:</label>
+          <div>
+            <label><input type="radio" name="is_admin" value="0" checked /> Regular User</label>
+            <label><input type="radio" name="is_admin" value="1" /> Site Admin</label>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit">Sign Up</button>
+        </div>
+      </form>
+
+      <p class="muted">Submitting the form will create a user and sign you in if successful.</p>
+    </div>
+  </div>
+</body>
+</html>
