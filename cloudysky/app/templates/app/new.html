@@ -27,7 +27,6 @@
 
       <form action="/app/createUser" method="post">
         {% csrf_token %}
-        <input type="hidden" name="is_admin" value="0" />
 
         <div class="row">
           <label for="user_name">User Name</label>
@@ -50,8 +49,11 @@
         </div>
 
         <div class="row">
-          <label><input type="checkbox" name="make_admin" value="1" /> I am a site admin</label>
-          <p class="muted">Leave unchecked for a normal user.</p>
+          <label>Account Type:</label>
+          <div>
+            <label><input type="radio" name="is_admin" value="0" checked /> Regular User</label>
+            <label><input type="radio" name="is_admin" value="1" /> Site Admin</label>
+          </div>
         </div>
 
         <div class="actions">
@@ -62,14 +64,5 @@
       <p class="muted">Submitting the form will create a user and sign you in if successful.</p>
     </div>
   </div>
-
-  <script>
-    const form = document.querySelector('form');
-    const makeAdmin = form.querySelector('input[name="make_admin"]');
-    const isAdminHidden = form.querySelector('input[name="is_admin"]');
-    makeAdmin.addEventListener('change', () => {
-      isAdminHidden.value = makeAdmin.checked ? '1' : '0';
-    });
-  </script>
 </body>
 </html>

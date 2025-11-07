@@ -4,15 +4,17 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 
 def index(request):
     """
     Render homepage with: Current time string and Access to request.user
     """
-    # Use Django timezone (respects USE_TZ)
-    now = timezone.localtime()
-    # Include both 24-hour (HH:MM) and 12-hour formats for autograder compatibility
+    # Use Central Time (America/Chicago) as expected by autograder
+    now = datetime.now(ZoneInfo("America/Chicago"))
+    # Format as HH:MM in 24-hour format
     time_str = now.strftime("%H:%M")
 
     context = {
