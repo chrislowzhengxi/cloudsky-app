@@ -69,9 +69,9 @@
 
       <!-- Highlight current logged-in user -->
       {% if user.is_authenticated %}
-        <p>Signed in as <span class="user-pill">{{ user.username }}</span> ({{ user.email }})</p>
+        <h1>Welcome {{ user.username }} ({{ user.email }})</h1>
       {% else %}
-        <p class="muted">Not logged in</p>
+        <h1>Not logged in</h1>
       {% endif %}
 
       <!-- Current time from the view context -->
