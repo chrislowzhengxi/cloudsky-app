@@ -22,8 +22,8 @@ from app import views as app_views
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path("", views.dummypage),
-    path("dummypage", views.dummypage, name="index"),
+    # Removed: path("", views.dummypage) - conflicts with app.urls index
+    path("dummypage", views.dummypage, name="dummypage"),
     path("app/time", views.time_now),
     path("app/sum", views.sum_view),
     path('admin/', admin.site.urls),
@@ -31,5 +31,5 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(), name='accounts_login'),
     # Alternate routes for autograder (grading expects /createUser not /app/createUser)
     path('createUser', app_views.create_user, name='create_user_alt'),
-    path('', include('app.urls')),
+    path('', include('app.urls')),  # This handles / and /index.html
 ]
