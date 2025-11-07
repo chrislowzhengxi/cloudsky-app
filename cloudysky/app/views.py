@@ -56,22 +56,26 @@ def create_user(request):
     if missing:
         return HttpResponse(f"Missing required field(s): {', '.join(missing)}", status=400)
 
-    if User.objects.filter(email__iexact=email).exists():
-        return HttpResponse("Email already in use", status=400)
-    if User.objects.filter(username__iexact=username).exists():
-        return HttpResponse("Username already exists", status=400)
+    try:
+        if User.objects.filter(email__iexact=email).exists():
+            return HttpResponse("Email already in use", status=400)
+        if User.objects.filter(username__iexact=username).exists():
+            return HttpResponse("Username already exists", status=400)
 
-    last_name = (request.POST.get("last_name") or "").strip()
+        last_name = (request.POST.get("last_name") or "").strip()
 
-    user = User.objects.create_user(username=username, email=email, password=password)
-    if last_name:
-        user.last_name = last_name
-    
-    user.is_staff = bool(is_admin)
-    user.save()
+        user = User.objects.create_user(username=username, email=email, password=password)
+        if last_name:
+            user.last_name = last_name
+        
+        user.is_staff = bool(is_admin)
+        user.save()
 
-    auth_user = authenticate(request, username=username, password=password)
-    if auth_user is not None:
-        login(request, auth_user)
+        auth_user = authenticate(request, username=username, password=password)
+        if auth_user is not None:
+            login(request, auth_user)
 
-    return HttpResponse("User created successfully.")
+        return HttpResponse("User created successfully.")
+    except Exception as e:
+        # Return 500 with error message for debugging
+        return HttpResponse(f"Database error: {str(e)}", status=500)
