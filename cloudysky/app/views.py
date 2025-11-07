@@ -27,7 +27,7 @@ def new_user(request):
     return render(request, "app/new.html")
 
 
-@csrf_exempt  # Exempt to allow curl-based grading without CSRF token
+@csrf_exempt  
 def create_user(request):
     """Create a new user via POST with fields: email, user_name, password, is_admin.
     We shold reject non-POST with 405. email, username is unique (case-insensitive)
