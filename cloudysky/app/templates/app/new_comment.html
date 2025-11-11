@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Comment</title>
+</head>
+<body>
+    <h1>Create New Comment</h1>
+    
+    <form action="/app/createComment/" method="POST">
+        <div>
+            <label for="post_id">Post ID:</label><br>
+            <input type="number" id="post_id" name="post_id" required>
+        </div>
+        <br>
+        <div>
+            <label for="content">Comment:</label><br>
+            <textarea id="content" name="content" rows="5" cols="50" required></textarea>
+        </div>
+        <br>
+        <div>
+            <button type="submit">Submit Comment</button>
+        </div>
+    </form>
+    
+    <br>
+    <a href="/">Back to Home</a>
+</body>
+</html>
