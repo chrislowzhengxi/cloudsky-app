@@ -30,6 +30,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('accounts/login/', auth_views.LoginView.as_view(), name='accounts_login'),
     # Alternate routes for autograder (grading expects /createUser not /app/createUser)
-    path('createUser', app_views.create_user, name='create_user_alt'),
+    path('createUser/', app_views.create_user, name='create_user_alt'),
     path('', include('app.urls')),  # This handles / and /index.html
 ]
