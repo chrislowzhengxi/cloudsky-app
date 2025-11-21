@@ -1,0 +1,18 @@
+Full Decoded Message:
+--------------------------------------------------------------------------------
+I consider myself to be a man of principle. But, what man does not? Even the cutthroat, I have noticed, considers his actions "moral" after a fashion. Perhaps another person, reading of my life, would name me a religious tysxnt. He could call me arrogant. What is to make that man's opinion any less valid than my own? I guess it all comes down to one fact: In the end, I'm the one with the armies.
+--------------------------------------------------------------------------------
+
+Misspelled Word: tysxnt.
+9-Digit Key: 049677629
+
+Steps and Tools Used:
+1. Key Brute Force (reference puzzle/solve_puzzle.py): Used a parallel processing Python script (multiprocessing module) to brute-force the 9-digit key space (000000000 to 999999999). This was sped up by only checking for hashes of common "anchor" words (e.g., "the", "and") combined with the key. (Time: ~20 minutes)
+2. Initial Decryption: Decrypted the majority of the message using the discovered key (049677629) and a large dictionary. This process revealed a few blanks due to punctuation and the single misspelled word. (Took around 30 minutes. I used midway3 amd-hm to speed up with CPU).
+3. Punctuation & Quoting Solve (Targeted 1-Edit Brute Force): Used contextual clues (the Mistborn quote) and a custom Python script to perform a highly targeted 1-edit brute-force search combined with various punctuation (periods, quotes, etc.) on suspected missing words ("moral," "principle"). This step correctly identified:
+    * The word "moral" was in the file as "\"moral\"" (straight quotes).
+    * The word "principle" was in the file as "principle." (singular with period).
+    * The problem likely lies in tyrant.
+4. Misspelling Solve (Targeted 2-Edit Brute Force) - Reference (puzzle/faster_puzzle.py): Since the last blank word ("tyrant") did not yield a result from the 1-edit check, a final, highly aggressive 2-edit distance brute-force script was used to check all possible two-character typos of "tyrant" combined with punctuation. This step discovered the final misspelled word: "tysxnt.". (Time: ~2 minutes with amd-hm)
+
+Total Time Estimated: Approximately 55 minutes (plus 2 hours of coming up with the approach)
