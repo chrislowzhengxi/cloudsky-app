@@ -1,0 +1,4 @@
+Running puzzle solver on 100 cores...
+[*] Starting search on 128 cores.
+[*] Searching space: 000000000 - 999999999
+[-] Key not found. Ensure ANCHORS contains a word in the text.
