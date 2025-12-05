@@ -250,12 +250,15 @@ def hide_comment(request):
 def dump_feed(request):
     """
     Diagnostic output view that returns all posts as JSON.
-    Only accessible by admin users.
+    Applies censorship logic:
+    - Admins can see hidden content (flagged)
+    - Authors can see their own hidden content
+    - Other users cannot see hidden content
     """
     if request.method != "GET":
         return HttpResponse("Method not allowed", status=405)
     
-    # Check if user is logged in (admin check removed for now to allow regular users)
+    # Check if user is logged in
     if not request.user.is_authenticated:
         return HttpResponse("", status=200)
     
@@ -264,12 +267,24 @@ def dump_feed(request):
         feed_data = []
         
         for post in posts:
+            # Check if post is hidden and if user can see it
+            if post.is_hidden:
+                # Only show hidden posts to admins and the author
+                if not (request.user.is_staff or request.user == post.author):
+                    continue
+            
             # Format date as "YYYY-MM-DD HH:MM"
             date_str = post.created_at.strftime("%Y-%m-%d %H:%M")
             
             # Get comment details (not just IDs, but full comment info)
             comments_data = []
             for comment in post.comments.all():
+                # Check if comment is hidden and if user can see it
+                if comment.is_hidden:
+                    # Only show hidden comments to admins and the author
+                    if not (request.user.is_staff or request.user == comment.author):
+                        continue
+                
                 comments_data.append({
                     'id': comment.id,
                     'author': comment.author.username,
