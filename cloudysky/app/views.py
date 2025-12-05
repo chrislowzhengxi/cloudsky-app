@@ -306,3 +306,140 @@ def dump_feed(request):
     except Exception as e:
         return HttpResponse(f"Database error: {str(e)}", status=500)
 
+
+@csrf_exempt
+def feed(request):
+    """
+    API endpoint that returns feed of posts in reverse chronological order.
+    Shows: number, title, date, username, truncated content.
+    Implements censorship: hidden posts only visible to creator and admins.
+    """
+    if request.method != "GET":
+        return HttpResponse("Method not allowed", status=405)
+    
+    try:
+        # Get all posts in reverse chronological order
+        all_posts = Post.objects.all().order_by('-created_at')
+        feed_data = []
+        
+        for post in all_posts:
+            # Check if post is hidden
+            if post.is_hidden:
+                # Only show to creator or admins
+                if request.user.is_authenticated:
+                    if post.author == request.user or request.user.is_staff:
+                        pass  # Show the post
+                    else:
+                        continue  # Skip this post
+                else:
+                    continue  # Skip this post
+            
+            # Format date as "YYYY-MM-DD HH:MM"
+            date_str = post.created_at.strftime("%Y-%m-%d %H:%M")
+            
+            # Truncate content to 200 characters
+            truncated_content = post.content[:200]
+            if len(post.content) > 200:
+                truncated_content += "..."
+            
+            post_dict = {
+                'id': post.id,
+                'username': post.author.username,
+                'date': date_str,
+                'title': post.title,
+                'content': truncated_content
+            }
+            feed_data.append(post_dict)
+        
+        return JsonResponse(feed_data, safe=False)
+    except Exception as e:
+        return HttpResponse(f"Database error: {str(e)}", status=500)
+
+
+@csrf_exempt
+def post_detail(request, post_id):
+    """
+    API endpoint that returns details of a specific post including all comments.
+    Implements censorship:
+    - Hidden posts: only visible to creator and admins
+    - Hidden comments: show placeholder except to creator and admins
+    """
+    if request.method != "GET":
+        return HttpResponse("Method not allowed", status=405)
+    
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return HttpResponse("Post not found", status=404)
+    except ValueError:
+        return HttpResponse("Invalid post_id", status=400)
+    
+    try:
+        # Check if post is hidden
+        if post.is_hidden:
+            # Only show to creator or admins
+            if request.user.is_authenticated:
+                if post.author != request.user and not request.user.is_staff:
+                    return HttpResponse("Post not found", status=404)
+            else:
+                return HttpResponse("Post not found", status=404)
+        
+        # Format date as "YYYY-MM-DD HH:MM"
+        date_str = post.created_at.strftime("%Y-%m-%d %H:%M")
+        
+        # Get all comments for this post
+        comments_data = []
+        for comment in post.comments.all().order_by('created_at'):
+            if comment.is_hidden:
+                # Check if user can see hidden comment
+                if request.user.is_authenticated:
+                    if comment.author == request.user or request.user.is_staff:
+                        # Show full comment to creator or admin
+                        comments_data.append({
+                            'id': comment.id,
+                            'author': comment.author.username,
+                            'content': comment.content,
+                            'date': comment.created_at.strftime("%Y-%m-%d %H:%M"),
+                            'is_hidden': True
+                        })
+                    else:
+                        # Show placeholder to others
+                        comments_data.append({
+                            'id': comment.id,
+                            'author': '[removed]',
+                            'content': 'This comment has been removed',
+                            'date': comment.created_at.strftime("%Y-%m-%d %H:%M"),
+                            'is_hidden': True
+                        })
+                else:
+                    # Show placeholder to anonymous users
+                    comments_data.append({
+                        'id': comment.id,
+                        'author': '[removed]',
+                        'content': 'This comment has been removed',
+                        'date': comment.created_at.strftime("%Y-%m-%d %H:%M"),
+                        'is_hidden': True
+                    })
+            else:
+                # Show normal comment
+                comments_data.append({
+                    'id': comment.id,
+                    'author': comment.author.username,
+                    'content': comment.content,
+                    'date': comment.created_at.strftime("%Y-%m-%d %H:%M"),
+                    'is_hidden': False
+                })
+        
+        post_data = {
+            'id': post.id,
+            'username': post.author.username,
+            'date': date_str,
+            'title': post.title,
+            'content': post.content,
+            'comments': comments_data
+        }
+        
+        return JsonResponse(post_data, safe=False)
+    except Exception as e:
+        return HttpResponse(f"Database error: {str(e)}", status=500)
+
